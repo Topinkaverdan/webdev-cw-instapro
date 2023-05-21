@@ -2,6 +2,7 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { goToPage } from "../index.js";
 import { getPosts } from "../api.js";
+import { renderUploadImageComponent } from "./upload-image-component.js";
 
 export let posts = [];
 
