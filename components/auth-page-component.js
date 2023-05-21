@@ -69,9 +69,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
     if (uploadImageContainer) {
       renderUploadImageComponent({
         element: appEl.querySelector(".upload-image-container"),
-        onImageUrlChange(newImageUrl) {
-          imageUrl = newImageUrl;
-        },
+        // onImageUrlChange(newImageUrl) {
+        //   imageUrl = newImageUrl;
+        // },
       });
     }
 
@@ -107,6 +107,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         const login = document.getElementById("login-input").value;
         const name = document.getElementById("name-input").value;
         const password = document.getElementById("password-input").value;
+        const imageUrl = document.querySelector(".file-upload-image").src;
         if (!name) {
           alert("Введите имя");
           return;

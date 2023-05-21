@@ -62,6 +62,11 @@
   margin-right: 10px;
 }
 
+.user-post-image {
+  width: 70px;
+  height: 70px;
+}
+
 .post-image-container {
   margin-left: -20px;
   margin-right: -20px;
