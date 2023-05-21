@@ -1,6 +1,7 @@
 import { getPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
+import { fetchGetPosts } from "./components/posts-page-component.js";
 import {
   ADD_POSTS_PAGE,
   AUTH_PAGE,
@@ -15,10 +16,10 @@ import {
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
+import { posts } from "./components/posts-page-component.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
-export let posts = [];
 
 const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
@@ -31,9 +32,6 @@ export const logout = () => {
   goToPage(POSTS_PAGE);
 };
 
-/**
- * Включает страницу приложения
- */
 export const goToPage = (newPage, data) => {
   if (
     [
@@ -52,18 +50,11 @@ export const goToPage = (newPage, data) => {
 
     if (newPage === POSTS_PAGE) {
       page = LOADING_PAGE;
-      renderApp();
-
-      return getPosts({ token: getToken() })
-        .then((newPosts) => {
-          page = POSTS_PAGE;
-          posts = newPosts;
-          renderApp();
-        })
-        .catch((error) => {
-          console.error(error);
-          goToPage(POSTS_PAGE);
-        });
+      renderApp()
+      // .catch((error) => {
+      //     console.error(error);
+      //     goToPage(POSTS_PAGE);
+      //   });
     }
 
     if (newPage === USER_POSTS_PAGE) {
@@ -118,9 +109,7 @@ const renderApp = () => {
   }
 
   if (page === POSTS_PAGE) {
-    return renderPostsPageComponent({
-      appEl,
-    });
+    return fetchGetPosts();
   }
 
   if (page === USER_POSTS_PAGE) {
