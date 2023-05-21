@@ -2,6 +2,7 @@ import { getPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import { fetchGetPosts } from "./components/posts-page-component.js";
+import { addPost } from "./api.js";
 import {
   ADD_POSTS_PAGE,
   AUTH_PAGE,
@@ -21,7 +22,7 @@ import { posts } from "./components/posts-page-component.js";
 export let user = getUserFromLocalStorage();
 export let page = null;
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -100,11 +101,12 @@ const renderApp = () => {
   if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
+      
       onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
+        fetchGetPosts()
         goToPage(POSTS_PAGE);
-      },
+      }
+
     });
   }
 

@@ -1,5 +1,6 @@
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
+import { addPost } from "../api.js";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
@@ -34,10 +35,27 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     });
 
     document.getElementById("add-button").addEventListener("click", () => {
-      onAddPostClick({
-        description: "Описание картинки",
-        imageUrl: "https://image.png",
-      });
+
+      if (document.querySelector(".file-upload-image") == null) {
+
+        alert("Загрузите, пожалуйста, изображение");
+        return;
+        
+      }
+
+      if (document.querySelector(".textarea").value == "") {
+
+        alert("Добавьте, пожалуйста, описание");
+        return;
+
+      }
+
+      onAddPostClick(
+
+        addPost({description: document.querySelector(".textarea").value.replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
+        imageUrl: document.querySelector(".file-upload-image").src,})
+
+      );
     });
   };
 
