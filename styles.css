@@ -96,6 +96,15 @@
   padding-left: 0px;
   padding-bottom: 5px;
   cursor: pointer;
+  background-image: url(./assets/images/like-not-active.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 30px;
+  height: 20px;
+}
+
+.like-active-button {
+  background-image: url(./assets/images/like-active.svg);
 }
 
 .user-name {

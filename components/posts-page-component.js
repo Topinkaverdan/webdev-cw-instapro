@@ -1,8 +1,8 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { goToPage, user } from "../index.js";
-import { getPosts } from "../api.js";
-import { renderUploadImageComponent } from "./upload-image-component.js";
+import { getPosts, likePostActive, likePostDislike } from "../api.js";
+import { getToken } from "../index.js";
 
 export let posts = [];
 
@@ -19,10 +19,10 @@ export const fetchGetPosts = () => {
         imageProfile: post.user.imageUrl,
         name: post.user.name,
         imageUrl: post.imageUrl,
-        likes: post.likes.length,
+        likes: post.likes,
         date: post.createdAt,
         description: post.description,
-        isLiked: false,
+        isLiked: post.isLiked,
         idUser: post.user.id,
         idPost: post.id,
 
@@ -30,14 +30,13 @@ export const fetchGetPosts = () => {
 
     });
 
-    console.log(posts)
-
     renderPostsPageComponent();
 
 
   })
 
 };
+
 
 export function renderPostsPageComponent() {
 
@@ -53,11 +52,10 @@ export function renderPostsPageComponent() {
             <img class="post-image" src="${user.imageUrl}">
           </div>
           <div class="post-likes">
-            <button data-post-id="${user.idPost}" class="like-button">
-              <img src="./assets/images/like-not-active.svg">
+            <button data-post-id="${user.idPost}" data-index="${index}" data-like="${user.isLiked}" class="like-button ${user.isLiked ? "like-active-button" : ""}">
             </button>
             <p class="post-likes-text">
-              Нравится: <strong>${user.likes}</strong>
+              Нравится: <strong>${user.likes.length}</strong>
             </p>
           </div>
           <p class="post-text">
@@ -88,6 +86,58 @@ export function renderPostsPageComponent() {
 
   });
 
+  for (const button of document.querySelectorAll(".like-button")) {
+
+    button.addEventListener('click', () => {
+
+      const id = button.dataset.postId;
+      const index = button.dataset.index;
+
+      if (!getToken()) {
+
+        alert("Лайкать посты могут только автризованные пользователи")
+        
+      }
+
+      if (user) {
+
+        if (posts[index].isLiked === false) {
+
+          likePostActive({ id })
+          .then((response) => {
+          
+          posts[index].isLiked = true;
+          posts[index].likes.push({
+  
+            id: response.post.likes.at(-1).id,
+            name: response.post.likes.at(-1).name,
+  
+          })
+  
+            renderPostsPageComponent();
+            
+          })
+  
+        } else {
+  
+          posts[index].isLiked = false;
+          posts[index].likes.pop();
+  
+          likePostDislike({ id })
+          .then((response) => {
+  
+            renderPostsPageComponent();
+  
+          })
+          
+        }
+        
+      }
+
+    })
+
+  }
+
   for (let userEl of document.querySelectorAll(".post-header")) {
 
     userEl.addEventListener("click", () => {
@@ -111,6 +161,10 @@ export function renderPostsPageComponent() {
         }
 
       }
+    
+    renderUserPosts()
+
+    function renderUserPosts() {
 
       const userPostHtml = userPosts.map((user, index) => {
 
@@ -119,11 +173,10 @@ export function renderPostsPageComponent() {
                 <img class="post-image" src="${user.imageUrl}">
               </div>
               <div class="post-likes">
-                <button data-post-id="${user.idPost}" class="like-button">
-                  <img src="./assets/images/like-not-active.svg">
+                <button data-post-id="${user.idPost}" data-index=${index} class="like-button ${user.isLiked ? "like-active-button" : ""}">
                 </button>
                 <p class="post-likes-text">
-                  Нравится: <strong>${user.likes}</strong>
+                  Нравится: <strong>${user.likes.length}</strong>
                 </p>
               </div>
               <p class="post-text">
@@ -156,6 +209,60 @@ export function renderPostsPageComponent() {
         element: document.querySelector(".header-container"),
     
       });
+
+      for (const button of document.querySelectorAll(".like-button")) {
+
+        button.addEventListener('click', () => {
+    
+          const id = button.dataset.postId;
+          const index = button.dataset.index;
+
+          if (!getToken()) {
+
+            alert("Лайкать посты могут только автризованные пользователи")
+            
+          }
+
+          if (user) {
+
+            if (userPosts[index].isLiked === false) {
+    
+              likePostActive({ id })
+              .then((response) => {
+              
+              userPosts[index].isLiked = true;
+              userPosts[index].likes.push({
+      
+                id: response.post.likes.at(-1).id,
+                name: response.post.likes.at(-1).name,
+      
+              })
+      
+                renderUserPosts();
+                
+              })
+      
+            } else {
+      
+              userPosts[index].isLiked = false;
+              userPosts[index].likes.pop();
+      
+              likePostDislike({ id })
+              .then((response) => {
+      
+                renderUserPosts();
+      
+              })
+              
+            }
+            
+          }
+    
+        })
+    
+      }    
+
+    }  
 
       window.scrollTo(0, 0);
 
