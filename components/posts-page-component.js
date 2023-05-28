@@ -3,6 +3,10 @@ import { renderHeaderComponent } from "./header-component.js";
 import { goToPage, user } from "../index.js";
 import { getPosts, likePostActive, likePostDislike } from "../api.js";
 import { getToken } from "../index.js";
+import formatDistance from "date-fns/formatDistance";
+import  { ru }  from 'date-fns/locale'
+import format from "date-fns/format";
+import subDays from "date-fns/subDays";
 
 export let posts = [];
 
@@ -20,7 +24,7 @@ export const fetchGetPosts = () => {
         name: post.user.name,
         imageUrl: post.imageUrl,
         likes: post.likes,
-        date: post.createdAt,
+        date: formatDistance(new Date(), new Date(post.createdAt), {locale: ru}),
         description: post.description,
         isLiked: post.isLiked,
         idUser: post.user.id,
@@ -31,7 +35,6 @@ export const fetchGetPosts = () => {
     });
 
     renderPostsPageComponent();
-
 
   })
 
@@ -55,7 +58,7 @@ export function renderPostsPageComponent() {
             <button data-post-id="${user.idPost}" data-index="${index}" data-like="${user.isLiked}" class="like-button ${user.isLiked ? "like-active-button" : ""}">
             </button>
             <p class="post-likes-text">
-              Нравится: <strong>${user.likes.length}</strong>
+              Нравится: <strong>${user.likes.length > 1 ? user.likes.at(-1).name + " и еще " + (user.likes.length - 1) : user.likes.length === 1 ? user.likes.at(-1).name : "0"}</strong>
             </p>
           </div>
           <p class="post-text">
@@ -63,7 +66,7 @@ export function renderPostsPageComponent() {
             ${user.description}
           </p>
           <p class="post-date">
-            ${user.date}
+            ${user.date} назад
           </p>
         </li>`
   }).join('');
@@ -176,7 +179,7 @@ export function renderPostsPageComponent() {
                 <button data-post-id="${user.idPost}" data-index=${index} class="like-button ${user.isLiked ? "like-active-button" : ""}">
                 </button>
                 <p class="post-likes-text">
-                  Нравится: <strong>${user.likes.length}</strong>
+                  Нравится: <strong>${user.likes.length > 1 ? user.likes.at(-1).name + " и еще " + (user.likes.length - 1) : user.likes.length === 1 ? user.likes.at(-1).name : "0"}</strong>
                 </p>
               </div>
               <p class="post-text">
@@ -184,7 +187,7 @@ export function renderPostsPageComponent() {
                 ${user.description}
               </p>
               <p class="post-date">
-                ${user.date}
+                ${user.date} назад
               </p>
             </li>`
       }).join('');
@@ -201,7 +204,6 @@ export function renderPostsPageComponent() {
             </ul>
           </div>`
 
-      console.log(userPosts)
       appEl.innerHTML = appHtml;
 
       renderHeaderComponent({
