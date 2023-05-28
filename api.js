@@ -2,7 +2,7 @@
 // "боевая" версия инстапро лежит в ключе prod
 import { getToken } from "./index.js";
 
-const personalKey = "veronika";
+const personalKey = "veronika-danilova";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 

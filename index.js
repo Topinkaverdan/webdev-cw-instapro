@@ -52,18 +52,8 @@ export const goToPage = (newPage, data) => {
     if (newPage === POSTS_PAGE) {
       page = LOADING_PAGE;
       renderApp()
-      // .catch((error) => {
-      //     console.error(error);
-      //     goToPage(POSTS_PAGE);
-      //   });
-    }
 
-    // if (newPage === USER_POSTS_PAGE) {
-    //   // TODO: реализовать получение постов юзера из API
-    //   console.log("Открываю страницу пользователя: ", data.userId);
-    //   page = USER_POSTS_PAGE;
-    //   return renderApp();
-    // }
+    }
 
     page = newPage;
     renderApp();
@@ -113,12 +103,7 @@ const renderApp = () => {
     return fetchGetPosts();
   }
 
-  // if (page === USER_POSTS_PAGE) {
-  //   // // TODO: реализовать страницу фотографию пользвателя
-  //   appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-  //   return;
-    
-  // }
+
 };
 
 goToPage(POSTS_PAGE);

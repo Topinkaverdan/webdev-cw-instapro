@@ -69,9 +69,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
     if (uploadImageContainer) {
       renderUploadImageComponent({
         element: appEl.querySelector(".upload-image-container"),
-        // onImageUrlChange(newImageUrl) {
-        //   imageUrl = newImageUrl;
-        // },
+       
       });
     }
 
@@ -105,9 +103,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           });
       } else {
         const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
+        const name = document.getElementById("name-input").value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
         const password = document.getElementById("password-input").value;
-        const imageUrl = document.querySelector(".file-upload-image").src;
+        
         if (!name) {
           alert("Введите имя");
           return;
@@ -122,7 +120,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           return;
         }
 
-        if (!imageUrl) {
+        if (document.querySelector(".file-upload-image").src == null) {
           alert("Не выбрана фотография");
           return;
         }
@@ -131,7 +129,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           login: login,
           password: password,
           name: name,
-          imageUrl,
+          imageUrl: document.querySelector(".file-upload-image").src,
         })
           .then((user) => {
             setUser(user.user);
